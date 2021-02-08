@@ -24,6 +24,8 @@ ENV PORT=8443 \
     TLS_CERT=/tls/cert.pem \
     TLS_KEY=/tls/key.pem
 CMD [ "/kroki" ]
+EXPOSE $PORT
 
 COPY --from=frontend /work/public /public
 COPY --from=backend /work/kroki /kroki
+USER 10100111001

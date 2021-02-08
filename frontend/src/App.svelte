@@ -20,7 +20,7 @@
   };
 
   const connect = () => {
-    socket = new WebSocket("wss://localhost:8443/ws");
+    socket = new WebSocket(`wss://localhost:8443/ws`);
     socket.addEventListener("open", (a) => console.log("WS: open", a));
     socket.addEventListener("error", (e) => console.error("WS:", e));
 

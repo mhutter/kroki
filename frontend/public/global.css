@@ -1,6 +1,53 @@
+:root {
+  --text-size: 32px;
+}
+
 html,
 body {
   position: relative;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+main {
+  padding: 1em;
+  font-size: var(--text-size);
+  text-align: center;
+}
+
+input,
+button {
+  display: block;
+  font-size: var(--text-size);
+  width: 100%;
+}
+
+.mouth {
+  display: flex;
+  flex-direction: column;
+}
+.tooth {
+  line-height: 64px;
+}
+@media (min-width: 800px) {
+  .mouth {
+    flex-direction: row;
+  }
+
+  .tooth {
+    width: 64px;
+    margin: 10px;
+  }
+}
+
+.players {
+  list-style: none;
+  padding: 0;
+}
+.lost {
+  color: red;
 }

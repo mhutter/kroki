@@ -1,7 +1,6 @@
 package kroki
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -28,22 +27,26 @@ func NewRepo() *Repo {
 	}
 }
 
-// Create creates a new game with a random ID.
-func (r *Repo) Create() (id string, game *Game) {
+// Create creates a new game with the given ID.
+func (r *Repo) Create(id string) (game *Game, err error) {
 	game = NewGame()
-	id = r.newGameID()
+	game.ID = id
 	r.games[id] = game
 	return
 }
 
-// Get retrieves the game with the given ID, or an error if the given game does
-// not exist.
-func (r *Repo) Get(id string) (*Game, error) {
+// GetOrCreate retrieves the game with the given ID, or an error if the given
+// game does not exist.
+func (r *Repo) GetOrCreate(id string) (*Game, error) {
+	if id == "" {
+		id = r.newGameID()
+	}
+
 	if g := r.games[id]; g != nil {
 		return g, nil
 	}
 
-	return nil, fmt.Errorf("Game '%s' not found", id)
+	return r.Create(id)
 }
 
 // newGameID returns a random Game ID that is not in use yet.

@@ -1,51 +1,21 @@
 <script>
-  import { onMount } from "svelte";
+  import { gameID, player } from "./store";
+  import Game from "./components/Game.svelte";
+  import Form from "./components/Form.svelte";
 
-  const defaultState = { teeth: [], lost: false };
-  let state = defaultState;
-  let socket;
+  let displayForm = !$player.name || $player.name === "";
 
-  const onMessage = ({ data }) => {
-    console.log(data);
-    const { e, p } = JSON.parse(data);
-    switch (e) {
-      case "update":
-        state = p;
-        break;
-
-      default:
-        console.error("Invalid message", msg);
-        break;
-    }
-  };
-
-  const connect = () => {
-    socket = new WebSocket(`wss://localhost:8443/ws`);
-    socket.addEventListener("open", (a) => console.log("WS: open", a));
-    socket.addEventListener("error", (e) => console.error("WS:", e));
-
-    socket.addEventListener("close", (a) => {
-      console.log("WS: close", a);
-      state = defaultState;
-      setTimeout(connect, 1000);
-    });
-
-    socket.addEventListener("message", onMessage);
-  };
-
-  const press = (id) => {
-    socket.send(JSON.stringify({ e: "press", p: id }));
-  };
-
-  onMount(connect);
+  const showForm = () => (displayForm = true);
+  const hideForm = () => (displayForm = false);
 </script>
 
 <main>
   <h1>Kroki!</h1>
-  {#each state.teeth as pressed, i (i)}
-    <button disabled={pressed} on:click={() => press(i)}>{i + 1}</button>
-  {/each}
-  {#if state.lost}
-    <h1 color="red">OMG YOU LOST</h1>
+  {#if displayForm}
+    <Form {hideForm} name={$player.name} game={$gameID} />
+  {:else}
+    <Game {...$player} game={$gameID} />
+    <hr />
+    <button on:click={showForm}>Name ändern</button>
   {/if}
 </main>

@@ -20,8 +20,7 @@ type Server struct {
 }
 
 type GameRepo interface {
-	Create() (string, *Game)
-	Get(string) (*Game, error)
+	GetOrCreate(string) (*Game, error)
 }
 
 func NewServer() Server {
@@ -68,35 +67,7 @@ func (s Server) handleWS(w http.ResponseWriter, r *http.Request) {
 	s.readLoop(conn)
 }
 
-func (s Server) readLoop(conn *websocket.Conn) {
-	s.numClients.Inc()
-	defer s.numClients.Dec()
-	g := NewGame()
-	sendSetate(conn, g)
-
-	for {
-		var msg Message
-		if err := conn.ReadJSON(&msg); err != nil {
-			if !websocket.IsCloseError(err, websocket.CloseGoingAway) {
-				log.Println("Error reading message:", err)
-			}
-			return
-		}
-
-		switch msg.Event {
-		case "press":
-			id := int(msg.Payload.(float64))
-			g.Teeth[id] = true
-			if id == g.BadTooth {
-				g.Lost = true
-			}
-		}
-
-		sendSetate(conn, g)
-	}
-}
-
-func sendSetate(conn *websocket.Conn, game *Game) {
+func sendState(conn *websocket.Conn, game *Game) {
 	msg := &Message{Event: "update", Payload: game}
 	if err := conn.WriteJSON(msg); err != nil {
 		log.Println("Error writing response:", err)

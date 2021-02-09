@@ -29,20 +29,16 @@
     }
   };
 
-  const register = () => {
-    console.log("registring...");
-  };
+  const sendJSON = (payload) => socket.send(JSON.stringify(payload));
 
   const connect = () => {
     console.log("mounting...");
-    if (socket && socket.readyState === 1) return register();
-
     socket = new WebSocket(`wss://localhost:8443/ws`);
 
     socket.onopen = () => {
-      socket.send(JSON.stringify({ e: "setName", p: name }));
-      socket.send(JSON.stringify({ e: "setPlayerID", p: id }));
-      socket.send(JSON.stringify({ e: "joinGame", p: game }));
+      sendJSON({ e: "setName", p: name });
+      sendJSON({ e: "setPlayerID", p: id });
+      sendJSON({ e: "joinGame", p: game });
     };
 
     socket.onerror = (e) => console.error("WS:", e);
@@ -61,9 +57,8 @@
     socket.close(1000);
   };
 
-  const press = (id) => {
-    socket.send(JSON.stringify({ e: "press", p: id }));
-  };
+  const press = (id) => sendJSON({ e: "press", p: id });
+  const restart = () => sendJSON({ e: "restart" });
 
   const playerName = (id) => players.find((p) => p.id === id).name;
 
@@ -76,6 +71,7 @@
   <Kroki {teeth} {press} />
   {#if lost}
     <p>{playerName(lost)} het verlore :)</p>
+    <button on:click={restart}>Neu starten</button>
   {/if}
 
   <h2>Mitspieler</h2>

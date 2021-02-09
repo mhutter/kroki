@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DefaultNumTeeth = 10
+	NumTeeth = 10
 )
 
 type Game struct {
@@ -19,8 +19,8 @@ type Game struct {
 
 func NewGame() *Game {
 	return &Game{
-		Teeth:    make([]bool, DefaultNumTeeth),
-		BadTooth: rand.Intn(DefaultNumTeeth - 1),
+		Teeth:    make([]bool, NumTeeth),
+		BadTooth: rand.Intn(NumTeeth - 1),
 		Players:  make([]*Player, 0),
 	}
 }
@@ -37,7 +37,15 @@ func (g *Game) RemovePlayer(id string) {
 }
 
 func (g *Game) Join(p *Player) {
+	// TODO: remove duplicate players in case a player has the app open in two
+	// different browser windows
 	g.Players = append(g.Players, p)
+}
+
+func (g *Game) Restart() {
+	g.Teeth = make([]bool, NumTeeth)
+	g.BadTooth = rand.Intn(NumTeeth - 1)
+	g.WhoLost = ""
 }
 
 func (g *Game) Broadcast() {

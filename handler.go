@@ -49,6 +49,10 @@ func (s Server) readLoop(conn *websocket.Conn) {
 			}
 			game.Broadcast()
 
+		case "restart":
+			game.Restart()
+			game.Broadcast()
+
 		default:
 			log.Printf("unknown event: %v", msg)
 		}

@@ -1,6 +1,7 @@
+IMAGE := quay.io/mhutter/kroki:latest
 SOURCES := $(shell find . -name '*.go')
 
-start: db dev
+start: dev
 
 kroki: $(SOURCES) go.mod go.sum
 	go build -o $@ ./cmd/kroki
@@ -14,10 +15,15 @@ dev: cert.pem
 lint:
 	golangci-lint run --tests=false ./...
 
+image:
+	docker build -t $(IMAGE) .
+push:
+	docker push $(IMAGE)
+
 cert.pem key.pem:
 	go run "$$(go env GOROOT)/src/crypto/tls/generate_cert.go" --host localhost
 
 clean:
 	rm -f cert.pem key.pem kroki
 
-.PHONY: db dev lint clean
+.PHONY: db dev lint clean image push

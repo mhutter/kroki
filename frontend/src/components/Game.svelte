@@ -84,4 +84,8 @@
       <li class:lost={id === lost}>{name}</li>
     {/each}
   </ul>
+  <p>
+    Verschicke folgenden Link um weitere Spieler einzuladen:
+    <input type="text" readonly value={location} />
+  </p>
 </div>

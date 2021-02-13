@@ -13,7 +13,15 @@ const localStorageJSON = (key) => JSON.parse(localStorage.getItem(key));
 // Stores
 //
 const player = writable(localStorageJSON(keyPlayer) || { id: randomID() });
-const gameID = writable(localStorage.getItem(keyGame));
+const gameID = writable(
+  (() => {
+    const hash = location.hash;
+    if (hash !== "") {
+      return hash.substring(1);
+    }
+    return localStorage.getItem(keyGame);
+  })()
+);
 export { player, gameID };
 
 //
@@ -28,6 +36,7 @@ export const setName = (name) =>
 
 export const setGame = (id) =>
   gameID.update(() => {
+    location.hash = id;
     localStorage.setItem(keyGame, id);
     return id;
   });

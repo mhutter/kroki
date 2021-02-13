@@ -16,6 +16,6 @@
   {:else}
     <Game {...$player} game={$gameID} {showForm} />
     <hr />
-    <button on:click={showForm}>Name ändern</button>
+    <button on:click={showForm}>Name/Spiel wechseln</button>
   {/if}
 </main>

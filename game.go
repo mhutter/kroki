@@ -6,21 +6,26 @@ import (
 )
 
 const (
-	NumTeeth = 10
+	// NumTeeth is the number of teeth allocated in new games
+	NumTeeth int = 10
 )
 
+// Game represents an individual session, or a "Kroki"
 type Game struct {
-	ID       string    `json:"id"`
-	Teeth    []bool    `json:"teeth"`
-	WhoLost  string    `json:"lost,omitempty"`
-	Players  []*Player `json:"players"`
-	BadTooth int       `json:"-"`
+	ID string `json:"id"`
+
+	Teeth    []bool `json:"teeth"`
+	BadTooth int    `json:"-"`
+
+	Players []*Player `json:"players"`
+	WhoLost string    `json:"lost,omitempty"`
 }
 
+// NewGame returns a new, initialized Game
 func NewGame() *Game {
 	return &Game{
 		Teeth:    make([]bool, NumTeeth),
-		BadTooth: rand.Intn(NumTeeth - 1),
+		BadTooth: rand.Intn(NumTeeth),
 		Players:  make([]*Player, 0),
 	}
 }

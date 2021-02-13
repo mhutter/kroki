@@ -2,6 +2,7 @@ package kroki
 
 import (
 	"log"
+	"math/rand"
 
 	"github.com/gorilla/websocket"
 )
@@ -16,7 +17,7 @@ func (s Server) readLoop(conn *websocket.Conn) {
 	defer s.numClients.Dec()
 
 	var game *Game
-	player := Player{conn: conn}
+	player := Player{conn: conn, connID: rand.Int()}
 
 	for {
 		var msg Message
@@ -38,7 +39,7 @@ func (s Server) readLoop(conn *websocket.Conn) {
 		case "joinGame":
 			game = s.handleJoinGame(msg)
 			game.Join(&player)
-			defer game.RemovePlayer(player.ID)
+			defer game.Leave(&player)
 			game.Broadcast()
 
 		case "press":

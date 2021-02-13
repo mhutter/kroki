@@ -30,11 +30,12 @@ func NewGame() *Game {
 	}
 }
 
-func (g *Game) RemovePlayer(id string) {
+func (g *Game) Leave(p *Player) {
 	for i := 0; i < len(g.Players); i++ {
-		if g.Players[i].ID != id {
+		if g.Players[i].connID != p.connID {
 			continue
 		}
+		// Slice out player
 		g.Players = append(g.Players[:i], g.Players[i+1:]...)
 		return
 
@@ -44,6 +45,16 @@ func (g *Game) RemovePlayer(id string) {
 func (g *Game) Join(p *Player) {
 	// TODO: remove duplicate players in case a player has the app open in two
 	// different browser windows
+	for i, v := range g.Players {
+		if v.ID == p.ID {
+			// Replace existing player with same ID
+			g.Players[i] = p
+			// Disconnect old connection
+			v.conn.WriteJSON(&Message{Event: "leave"})
+			v.conn.Close()
+			return
+		}
+	}
 	g.Players = append(g.Players, p)
 }
 

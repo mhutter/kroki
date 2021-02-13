@@ -14,7 +14,7 @@
   {#if displayForm}
     <Form {hideForm} name={$player.name} game={$gameID} />
   {:else}
-    <Game {...$player} game={$gameID} />
+    <Game {...$player} game={$gameID} {showForm} />
     <hr />
     <button on:click={showForm}>Name ändern</button>
   {/if}

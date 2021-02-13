@@ -8,7 +8,7 @@
   let lost;
   // const defaultState = { teeth: [], lost: false, players: [] };
 
-  export let id, name;
+  export let id, name, showForm;
   export let game = "";
   let socket;
 
@@ -23,8 +23,12 @@
         setGame(p.id);
         break;
 
+      case "leave":
+        showForm();
+        break;
+
       default:
-        console.error("Invalid message", msg);
+        console.error("Invalid message", e);
         break;
     }
   };

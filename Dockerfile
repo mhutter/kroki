@@ -8,7 +8,7 @@ COPY frontend/ ./
 RUN  yarn run build
 
 
-FROM docker.io/library/golang:1.15.8 AS backend
+FROM docker.io/library/golang:1.16.0 AS backend
 WORKDIR /work
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 

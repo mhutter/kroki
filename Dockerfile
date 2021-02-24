@@ -1,4 +1,4 @@
-FROM docker.io/library/node:15.9.0-alpine AS frontend
+FROM docker.io/library/node:15.10.0-alpine AS frontend
 WORKDIR /work
 
 COPY frontend/package.json frontend/yarn.lock frontend/.yarnclean ./
